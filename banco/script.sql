@@ -28,8 +28,8 @@ create table livro(
   idlivro bigserial not null, 
   titulo varchar(40) not null,
   ano integer not null,
-  paginas integer null,
-  edicao integer null,
+  paginas integer not null,
+  edicao integer not null,
   resumo text null,
   emprestado boolean default false,
   idcategoria bigint not null,
@@ -60,5 +60,3 @@ create table emprestimo(
   constraint fk_emprestimo_livro foreign key (idlivro) references livro(idlivro),
   constraint fk_emprestimo_pessoa foreign key (idpessoa) references pessoa(idpessoa)	
 );
-
-GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO user_in_env;

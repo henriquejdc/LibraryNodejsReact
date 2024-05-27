@@ -1,4 +1,4 @@
-### Basic Project with NodeJS and Express (PostgreSQL)
+### Basic Project with NodeJS + Express (PostgreSQL) and React
 
 ### Run project:
 ```
