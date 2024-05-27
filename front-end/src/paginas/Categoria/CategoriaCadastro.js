@@ -68,7 +68,7 @@ export default function CategoriaCadastro() {
     useEffect(() => {
         if (id)
             selecionar();
-    }, [id, selecionar]);
+    }, []);
 
 
     return (

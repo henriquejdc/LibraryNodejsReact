@@ -70,7 +70,7 @@ export default function PessoaCadastro() {
     useEffect(() => {
         if (id)
             selecionar();
-    }, [id, selecionar]);
+    }, []);
 
     return (
         <>

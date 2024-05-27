@@ -66,7 +66,7 @@ export default function LivroAutorCadastro() {
     useEffect(() => {
         if (id)
             selecionar();
-    }, [id, selecionar]);
+    }, []);
 
     return (
         <>

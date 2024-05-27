@@ -19,7 +19,7 @@ async function criar(req, res) {
         res.status(500).send("Parametro titulo é obrigatório.");
     if (!req.body.ano)
         res.status(500).send("Parametro ano é obrigatório.");
-    if (!req.body.emprestado)
+    if (!req.body.emprestado === null)
         res.status(500).send("Parametro emprestado é obrigatório.");
     if (!req.body.idcategoria)
         res.status(500).send("Parametro idcategoria é obrigatório.");
@@ -46,7 +46,7 @@ async function alterar(req, res) {
         res.status(500).send("Parametro titulo é obrigatório.");
     if (!req.body.ano)
         res.status(500).send("Parametro ano é obrigatório.");
-    if (!req.body.emprestado)
+    if (!req.body.emprestado === null)
         res.status(500).send("Parametro emprestado é obrigatório.");
     if (!req.body.idcategoria)
         res.status(500).send("Parametro idcategoria é obrigatório.");

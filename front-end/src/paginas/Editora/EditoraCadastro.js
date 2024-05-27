@@ -68,7 +68,7 @@ export default function EditoraCadastro() {
     useEffect(() => {
         if (id)
             selecionar();
-    }, [id, selecionar]);
+    }, []);
 
 
     return (

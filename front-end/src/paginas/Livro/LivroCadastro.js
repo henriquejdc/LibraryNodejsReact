@@ -38,10 +38,6 @@ export default function LivroCadastro() {
         }
     }
 
-    const handleCheckboxChange = (e) => {
-        setEmprestado(e.target.checked);
-    };
-
     const salvar = async () => {
         try {
             if (id) await alterar();
@@ -94,29 +90,49 @@ export default function LivroCadastro() {
     useEffect(() => {
         if (id)
             selecionar();
-    }, [id, selecionar]);
+    }, []);
 
     return (
         <>
             <h1>{id ? 'Alterar Livro' : 'Inserir Livro'}</h1>
             <Form>
                 <Form.Group className="mb-3">
-                    <Form.Label>Título</Form.Label>
-                    <Form.Control
-                        type="text"
+                    <Form.Label>Titulo</Form.Label>
+                    <Form.Control type="text"
                         value={titulo}
-                        onChange={(e) => setTitulo(e.target.value)}
-                    />
-                </Form.Group>
-                {/* Adicione os outros campos do formulário aqui... */}
-                <Form.Group>
+                        onChange={(e) => setTitulo(e.target.value)} />
+                    <Form.Label>Ano</Form.Label>
+                    <Form.Control type="number"
+                        value={ano}
+                        onChange={(e) => setAno(e.target.value)} />
+                    <Form.Label>Páginas</Form.Label>
+                    <Form.Control type="number"
+                        value={paginas}
+                        onChange={(e) => setPaginas(e.target.value)} />
+                    <Form.Label>Edição</Form.Label>
+                    <Form.Control type="number"
+                        value={edicao}
+                        onChange={(e) => setEdicao(e.target.value)} />
+                    <Form.Label>Resumo</Form.Label>
+                    <Form.Control type="text"
+                        value={resumo}
+                        onChange={(e) => setResumo(e.target.value)} />
+                    <Form.Label>Emprestado</Form.Label>
                     <Form.Check
                         type="checkbox"
-                        id="emprestado"
-                        label="Emprestado"
+                        id="checkbox"
+                        label="Sim"
                         checked={emprestado}
-                        onChange={handleCheckboxChange}
+                        onChange={(e) => setEmprestado(e.target.checked)}
                     />
+                    <Form.Label>Cód. Categoria</Form.Label>
+                    <Form.Control type="number"
+                        value={idcategoria}
+                        onChange={(e) => setIdCategoria(e.target.value)} />
+                    <Form.Label>Cód. Editora</Form.Label>
+                    <Form.Control type="number"
+                        value={ideditora}
+                        onChange={(e) => setIdEditora(e.target.value)} />
                 </Form.Group>
                 <Button variant="primary" onClick={salvar}>
                     Salvar
@@ -124,11 +140,10 @@ export default function LivroCadastro() {
                 <Button variant="secondary" onClick={voltar}>
                     Cancelar
                 </Button>
-                {id && (
-                    <Button variant="danger" onClick={excluir}>
-                        Excluir
-                    </Button>
-                )}
+                <Button variant="danger" type="button" hidden={!id}
+                    onClick={() => excluir()}>
+                    Excluir
+                </Button>
                 {erro && <p className="text-danger">{erro}</p>}
             </Form>
         </>

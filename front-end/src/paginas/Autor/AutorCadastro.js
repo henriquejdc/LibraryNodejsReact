@@ -68,7 +68,7 @@ export default function AutorCadastro() {
     useEffect(() => {
         if (id)
             selecionar();
-    }, [id, selecionar]);
+    }, []);
 
     return (
         <>

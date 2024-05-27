@@ -84,7 +84,7 @@ export default function EmprestimoCadastro() {
     useEffect(() => {
         if (id)
             selecionar();
-    }, [id, selecionar]);
+    }, []);
 
 
     return (
