@@ -5,62 +5,70 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 export default function EditoraCadastro() {
-    //Esta linha pega o Id da url em caso de edição
     const { id } = useParams();
-
-    //Cria um navegador para executar links
     const navigate = useNavigate();
-
-    //Declarar uma variável useState para cada campo da tabela
     const [editora, setEditora] = useState('');
+    const [erro, setErro] = useState(null); // Estado para armazenar mensagem de erro
 
-    //Volta para a tela de editoras
     const voltar = () => {
         navigate('/editoras');
     }
 
-    //Selecionar o registro no banco de dados para editação
     const selecionar = async () => {
-        const { data } = await axios.get(`http://localhost:4000/editora/${id}`);
-        setEditora(data.editora);
+        try {
+            const { data } = await axios.get(`http://localhost:4000/editora/${id}`);
+            setEditora(data.editora);
+        } catch (error) {
+            setErro('Erro ao carregar editora');
+        }
     }
 
-    //Método que verifica qual ação deve ser executada
-    const salvar = () => {
-        if (id)
-            alterar();
-        else
-            inserir();
+    const salvar = async () => {
+        try {
+            if (id)
+                await alterar();
+            else
+                await inserir();
+        } catch (error) {
+            setErro('Erro ao salvar editora');
+        }
     }
 
     const inserir = async () => {
-        const json = {
-            "editora": editora
-        };
-        await axios.post(`http://localhost:4000/editora`, json);
-        voltar();
+        try {
+            const json = { "editora": editora };
+            await axios.post(`http://localhost:4000/editora`, json);
+            voltar();
+        } catch (error) {
+            setErro('Erro ao inserir editora');
+        }
     }
 
     const alterar = async () => {
-        const json = {
-            "editora": editora
-        };
-        await axios.put(`http://localhost:4000/editora/${id}`, json);
-        voltar();
+        try {
+            const json = { "editora": editora };
+            await axios.put(`http://localhost:4000/editora/${id}`, json);
+            voltar();
+        } catch (error) {
+            setErro('Erro ao alterar editora');
+        }
     }
 
     const excluir = async () => {
         if (window.confirm('Deseja excluir agora?')) {
-            await axios.delete(`http://localhost:4000/editora/${id}`);
-            voltar();
+            try {
+                await axios.delete(`http://localhost:4000/editora/${id}`);
+                voltar();
+            } catch (error) {
+                setErro('Erro ao excluir editora');
+            }
         }
     }
 
-    //Inicia a tela buscando o registro em caso de edição
     useEffect(() => {
         if (id)
             selecionar();
-    }, []);
+    }, [id, selecionar]);
 
 
     return (
@@ -75,6 +83,9 @@ export default function EditoraCadastro() {
                         value={editora}
                         onChange={(e) => setEditora(e.target.value)} />
                 </Form.Group>
+
+                {/* Exibindo mensagem de erro */}
+                {erro && <p>{erro}</p>}
 
                 <Button variant="primary" type="button"
                     onClick={() => salvar()}>

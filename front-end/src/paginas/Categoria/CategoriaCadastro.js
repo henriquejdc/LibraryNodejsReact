@@ -5,62 +5,70 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 export default function CategoriaCadastro() {
-    //Esta linha pega o Id da url em caso de edição
     const { id } = useParams();
-
-    //Cria um navegador para executar links
     const navigate = useNavigate();
-
-    //Declarar uma variável useState para cada campo da tabela
     const [categoria, setCategoria] = useState('');
+    const [erro, setErro] = useState(null); // Estado para armazenar mensagem de erro
 
-    //Volta para a tela de categoriaes
     const voltar = () => {
         navigate('/categorias');
     }
 
-    //Selecionar o registro no banco de dados para editação
     const selecionar = async () => {
-        const { data } = await axios.get(`http://localhost:4000/categoria/${id}`);
-        setCategoria(data.categoria);
+        try {
+            const { data } = await axios.get(`http://localhost:4000/categoria/${id}`);
+            setCategoria(data.categoria);
+        } catch (error) {
+            setErro('Erro ao carregar categoria');
+        }
     }
 
-    //Método que verifica qual ação deve ser executada
-    const salvar = () => {
-        if (id)
-            alterar();
-        else
-            inserir();
+    const salvar = async () => {
+        try {
+            if (id)
+                await alterar();
+            else
+                await inserir();
+        } catch (error) {
+            setErro('Erro ao salvar categoria');
+        }
     }
 
     const inserir = async () => {
-        const json = {
-            "categoria": categoria
-        };
-        await axios.post(`http://localhost:4000/categoria`, json);
-        voltar();
+        try {
+            const json = { "categoria": categoria };
+            await axios.post(`http://localhost:4000/categoria`, json);
+            voltar();
+        } catch (error) {
+            setErro('Erro ao inserir categoria');
+        }
     }
 
     const alterar = async () => {
-        const json = {
-            "categoria": categoria
-        };
-        await axios.put(`http://localhost:4000/categoria/${id}`, json);
-        voltar();
+        try {
+            const json = { "categoria": categoria };
+            await axios.put(`http://localhost:4000/categoria/${id}`, json);
+            voltar();
+        } catch (error) {
+            setErro('Erro ao alterar categoria');
+        }
     }
 
     const excluir = async () => {
         if (window.confirm('Deseja excluir agora?')) {
-            await axios.delete(`http://localhost:4000/categoria/${id}`);
-            voltar();
+            try {
+                await axios.delete(`http://localhost:4000/categoria/${id}`);
+                voltar();
+            } catch (error) {
+                setErro('Erro ao excluir categoria');
+            }
         }
     }
 
-    //Inicia a tela buscando o registro em caso de edição
     useEffect(() => {
         if (id)
             selecionar();
-    }, []);
+    }, [id, selecionar]);
 
 
     return (
@@ -75,6 +83,9 @@ export default function CategoriaCadastro() {
                         value={categoria}
                         onChange={(e) => setCategoria(e.target.value)} />
                 </Form.Group>
+
+                {/* Exibindo mensagem de erro */}
+                {erro && <p>{erro}</p>}
 
                 <Button variant="primary" type="button"
                     onClick={() => salvar()}>

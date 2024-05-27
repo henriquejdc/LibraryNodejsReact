@@ -5,36 +5,37 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 export default function PessoaCadastro() {
-    //Esta linha pega o Id da url em caso de edição
     const { id } = useParams();
-
-    //Cria um navegador para executar links
     const navigate = useNavigate();
 
-    //Declarar uma variável useState para cada campo da tabela
     const [pessoa, setPessoa] = useState('');
     const [email, setEmail] = useState('');
     const [telefone, setTelefone] = useState('');
+    const [erro, setErro] = useState('');
 
-    //Volta para a tela de pessoas
     const voltar = () => {
         navigate('/pessoas');
     }
 
-    //Selecionar o registro no banco de dados para editação
     const selecionar = async () => {
-        const { data } = await axios.get(`http://localhost:4000/pessoa/${id}`);
-        setPessoa(data.pessoa);
-        setEmail(data.email);
-        setTelefone(data.telefone);
+        try {
+            const { data } = await axios.get(`http://localhost:4000/pessoa/${id}`);
+            setPessoa(data.pessoa);
+            setEmail(data.email);
+            setTelefone(data.telefone);
+        } catch (error) {
+            setErro('Erro ao carregar dados da pessoa.');
+        }
     }
 
-    //Método que verifica qual ação deve ser executada
-    const salvar = () => {
-        if (id)
-            alterar();
-        else
-            inserir();
+    const salvar = async () => {
+        try {
+            if (id) await alterar();
+            else await inserir();
+            voltar();
+        } catch (error) {
+            setErro('Erro ao salvar dados da pessoa.');
+        }
     }
 
     const inserir = async () => {
@@ -44,7 +45,6 @@ export default function PessoaCadastro() {
             "telefone": telefone
         };
         await axios.post(`http://localhost:4000/pessoa`, json);
-        voltar();
     }
 
     const alterar = async () => {
@@ -54,60 +54,65 @@ export default function PessoaCadastro() {
             "telefone": telefone
         };
         await axios.put(`http://localhost:4000/pessoa/${id}`, json);
-        voltar();
     }
 
     const excluir = async () => {
         if (window.confirm('Deseja excluir agora?')) {
-            await axios.delete(`http://localhost:4000/pessoa/${id}`);
-            voltar();
+            try {
+                await axios.delete(`http://localhost:4000/pessoa/${id}`);
+                voltar();
+            } catch (error) {
+                setErro('Erro ao excluir dados da pessoa.');
+            }
         }
     }
 
-    //Inicia a tela buscando o registro em caso de edição
     useEffect(() => {
         if (id)
             selecionar();
-    }, []);
-
+    }, [id, selecionar]);
 
     return (
         <>
-            <h1>{(id) ? 'Alterar pessoa' : 'Inserir pessoa'}</h1>
-
-            <h2>{pessoa}</h2>
+            <h1>{id ? 'Alterar pessoa' : 'Inserir pessoa'}</h1>
             <Form>
-                <Form.Group className="mb-3" controlId="formBasicEmail">
-                    <Form.Label>Nome do pessoa</Form.Label>
-                    <Form.Control type="text"
+                <Form.Group className="mb-3">
+                    <Form.Label>Nome</Form.Label>
+                    <Form.Control
+                        type="text"
                         value={pessoa}
-                        onChange={(e) => setPessoa(e.target.value)} />
-                    <Form.Label>Email</Form.Label>
-                    <Form.Control type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)} />
-                    <Form.Label>Telefone</Form.Label>
-                    <Form.Control type="tel"
-                        value={telefone}
-                        onChange={(e) => setTelefone(e.target.value)} />
+                        onChange={(e) => setPessoa(e.target.value)}
+                    />
                 </Form.Group>
-
-                <Button variant="primary" type="button"
-                    onClick={() => salvar()}>
+                <Form.Group className="mb-3">
+                    <Form.Label>Email</Form.Label>
+                    <Form.Control
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                    <Form.Label>Telefone</Form.Label>
+                    <Form.Control
+                        type="tel"
+                        value={telefone}
+                        onChange={(e) => setTelefone(e.target.value)}
+                    />
+                </Form.Group>
+                <Button variant="primary" onClick={salvar}>
                     Salvar
                 </Button>
-
-                <Button variant="secondary" type="button"
-                    onClick={() => voltar()}>
+                <Button variant="secondary" onClick={voltar}>
                     Cancelar
                 </Button>
-
-                <Button variant="danger" type="button" hidden={!id}
-                    onClick={() => excluir()}>
-                    Excluir
-                </Button>
+                {id && (
+                    <Button variant="danger" onClick={excluir}>
+                        Excluir
+                    </Button>
+                )}
+                {erro && <p className="text-danger">{erro}</p>}
             </Form>
         </>
-
     );
 }
