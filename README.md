@@ -1,9 +1,17 @@
 ### Basic Project with NodeJS + Express (PostgreSQL) and React
 
-### Run project:
+### Run project Backend:
 ```
-cd backend
+cd back-end
+npm install
 node server.js
+```
+
+### Run project Backend:
+```
+cd front-end
+npm install
+npm start
 ```
 
 Examples JSON in back-end/server.js with URLs endpoints
