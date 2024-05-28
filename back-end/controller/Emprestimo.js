@@ -10,7 +10,11 @@ async function listar(req, res) {
 
 async function listar_pendentes(req, res) {
     await emprestimo
-        .findAll()
+        .findAll({
+            where: {
+                devolucao_data: null
+            },
+        })
         .then(resultado => { res.status(200).json(resultado) })
         .catch(erro => { res.status(500).json(erro) });
 }

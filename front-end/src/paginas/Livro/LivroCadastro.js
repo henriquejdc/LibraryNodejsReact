@@ -120,14 +120,14 @@ export default function LivroCadastro() {
                         onChange={(e) => setResumo(e.target.value)} 
                         as="textarea" rows={3} 
                         />
-                    <Form.Label>Emprestado</Form.Label>
+                    {/* <Form.Label>Emprestado</Form.Label>
                     <Form.Check
                         type="checkbox"
                         id="checkbox"
                         label="Sim"
                         checked={emprestado}
                         onChange={(e) => setEmprestado(e.target.checked)}
-                    />
+                    /> */}
                     <Form.Label>Categoria</Form.Label>
                     <SelecionarItem
                         url="http://localhost:4000/categoria"
