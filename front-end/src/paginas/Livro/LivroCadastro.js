@@ -3,6 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import SelecionarItem from '../../componentes/SelecionarItem';
 
 export default function LivroCadastro() {
     const { id } = useParams();
@@ -116,7 +117,9 @@ export default function LivroCadastro() {
                     <Form.Label>Resumo</Form.Label>
                     <Form.Control type="text"
                         value={resumo}
-                        onChange={(e) => setResumo(e.target.value)} />
+                        onChange={(e) => setResumo(e.target.value)} 
+                        as="textarea" rows={3} 
+                        />
                     <Form.Label>Emprestado</Form.Label>
                     <Form.Check
                         type="checkbox"
@@ -125,14 +128,23 @@ export default function LivroCadastro() {
                         checked={emprestado}
                         onChange={(e) => setEmprestado(e.target.checked)}
                     />
-                    <Form.Label>Cód. Categoria</Form.Label>
-                    <Form.Control type="number"
+                    <Form.Label>Categoria</Form.Label>
+                    <SelecionarItem
+                        url="http://localhost:4000/categoria"
                         value={idcategoria}
-                        onChange={(e) => setIdCategoria(e.target.value)} />
-                    <Form.Label>Cód. Editora</Form.Label>
-                    <Form.Control type="number"
+                        name='categoria'
+                        id='idcategoria'
+                        onChange={(e) => setIdCategoria(e.target.value)}
+                    />
+
+                    <Form.Label>Editora</Form.Label>
+                    <SelecionarItem
+                        url="http://localhost:4000/editora"
                         value={ideditora}
-                        onChange={(e) => setIdEditora(e.target.value)} />
+                        name='editora'
+                        id='ideditora'
+                        onChange={(e) => setIdEditora(e.target.value)}
+                    />
                 </Form.Group>
                 <Button variant="primary" onClick={salvar}>
                     Salvar

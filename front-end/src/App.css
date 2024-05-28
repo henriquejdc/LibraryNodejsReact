@@ -36,3 +36,13 @@
     transform: rotate(360deg);
   }
 }
+
+.livros-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.livro-card {
+  width: 30%; /* Ajuste conforme necessário */
+}

@@ -20,33 +20,24 @@ export default function Emprestimo() {
         <>
             <TituloListagem titulo="Listagem de emprestimos"
                 subtitulo="Neste local você gerencia todos os emprestimos da biblioteca."
-                url="/emprestimo" />
+                />
 
             <Table>
                 <thead>
                     <tr>
-                        <th>#</th>
                         <th>Código</th>
                         <th>Emprestimo</th>
                         <th>Vencimento</th>
                         <th>Devolução</th>
-                        <th>Cód. Livro</th>
-                        <th>Cód. Pessoa</th>
                     </tr>
                 </thead>
                 <tbody>
                     {dados.map((d, i) => (
                         <tr key={i}>
-                            <td>
-                                <Link to={'/emprestimo/' + d.idemprestimo}
-                                    className='btn btn-primary'>Alterar</Link>
-                            </td>
                             <td>{d.idemprestimo}</td>
-                            <td>{d.emprestimo}</td>
-                            <td>{d.vencimento}</td>
-                            <td>{d.devolucao}</td>
-                            <td>{d.idlivro}</td>
-                            <td>{d.idpessoa}</td>
+                            <td>{d.emprestimo_data}</td>
+                            <td>{d.vencimento_data}</td>
+                            <td>{d.devolucao_data}</td>
                         </tr>
                     ))}
                 </tbody>

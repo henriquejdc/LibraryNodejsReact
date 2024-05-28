@@ -3,12 +3,11 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import SelecionarItem from '../../componentes/SelecionarItem';
 
 export default function EmprestimoCadastro() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [vencimento, setVencimento] = useState('');
-    const [devolucao, setDevolucao] = useState('');
     const [idlivro, setIdLivro] = useState('');
     const [idpessoa, setIdPessoa] = useState('');
     const [erro, setErro] = useState(null); // Estado para armazenar mensagem de erro
@@ -17,24 +16,9 @@ export default function EmprestimoCadastro() {
         navigate('/emprestimos');
     }
 
-    const selecionar = async () => {
-        try {
-            const { data } = await axios.get(`http://localhost:4000/emprestimo/${id}`);
-            setVencimento(data.vencimento);
-            setDevolucao(data.devolucao);
-            setIdLivro(data.idlivro);
-            setIdPessoa(data.idpessoa);
-        } catch (error) {
-            setErro('Erro ao carregar empréstimo');
-        }
-    }
-
     const salvar = async () => {
         try {
-            if (id)
-                await alterar();
-            else
-                await inserir();
+            await inserir();
         } catch (error) {
             setErro('Erro ao salvar empréstimo');
         }
@@ -43,8 +27,6 @@ export default function EmprestimoCadastro() {
     const inserir = async () => {
         try {
             const json = {
-                "vencimento": vencimento,
-                "devolucao": devolucao,
                 "idlivro": idlivro,
                 "idpessoa": idpessoa,
             };
@@ -55,37 +37,12 @@ export default function EmprestimoCadastro() {
         }
     }
 
-    const alterar = async () => {
-        try {
-            const json = {
-                "vencimento": vencimento,
-                "devolucao": devolucao,
-                "idlivro": idlivro,
-                "idpessoa": idpessoa,
-            };
-            await axios.put(`http://localhost:4000/emprestimo/${id}`, json);
-            voltar();
-        } catch (error) {
-            setErro('Erro ao alterar empréstimo');
-        }
-    }
-
-    const excluir = async () => {
-        if (window.confirm('Deseja excluir agora?')) {
-            try {
-                await axios.delete(`http://localhost:4000/emprestimo/${id}`);
-                voltar();
-            } catch (error) {
-                setErro('Erro ao excluir empréstimo');
-            }
-        }
-    }
-
     useEffect(() => {
-        if (id)
-            selecionar();
+        // Se houver um ID, então está sendo feita uma edição, precisamos buscar os detalhes do empréstimo
+        if (id) {
+            setIdLivro(id);
+        }
     }, []);
-
 
     return (
         <>
@@ -93,22 +50,22 @@ export default function EmprestimoCadastro() {
 
             <Form>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
-                    <Form.Label>Data da Devolução</Form.Label>
-                    <Form.Control type="date"
-                        value={devolucao}
-                        onChange={(e) => setDevolucao(e.target.value)} />
-                    <Form.Label>Data do Vencimento</Form.Label>
-                    <Form.Control type="date"
-                        value={vencimento}
-                        onChange={(e) => setVencimento(e.target.value)} />
-                    <Form.Label>Cód. Livro</Form.Label>
-                    <Form.Control type="number"
+                    <Form.Label>Livro</Form.Label>
+                    <SelecionarItem
+                        url="http://localhost:4000/livro"
                         value={idlivro}
-                        onChange={(e) => setIdLivro(e.target.value)} />
-                    <Form.Label>Cód. Pessoa</Form.Label>
-                    <Form.Control type="number"
+                        name='titulo'
+                        id='idlivro'
+                        onChange={(e) => setIdLivro(e.target.value)}
+                    />
+                    <Form.Label>Pessoa</Form.Label>
+                    <SelecionarItem
+                        url="http://localhost:4000/pessoa"
                         value={idpessoa}
-                        onChange={(e) => setIdPessoa(e.target.value)} />
+                        name='pessoa'
+                        id='idpessoa'
+                        onChange={(e) => setIdPessoa(e.target.value)}
+                    />
                 </Form.Group>
 
                 {/* Exibindo mensagem de erro */}
@@ -124,10 +81,6 @@ export default function EmprestimoCadastro() {
                     Cancelar
                 </Button>
 
-                <Button variant="danger" type="button" hidden={!id}
-                    onClick={() => excluir()}>
-                    Excluir
-                </Button>
             </Form>
         </>
 

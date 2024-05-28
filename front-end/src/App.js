@@ -25,6 +25,10 @@ import LivroAutorCadastro from './paginas/LivroAutor/LivroAutorCadastro';
 import Pessoa from './paginas/Pessoa/Pessoa';
 import PessoaCadastro from './paginas/Pessoa/PessoaCadastro';
 
+import Funcionario from './paginas/Funcionario/Funcionario';
+import FuncionarioCadastro from './paginas/Funcionario/FuncionarioCadastro';
+import EmprestimoPendente from './paginas/Emprestimo/EmprestimoPendente';
+
 function App() {
   return (
     <div>
@@ -48,6 +52,7 @@ function App() {
             <Route path='/editora/:id' element={<EditoraCadastro />} />
 
             <Route path='/emprestimos' element={<Emprestimo />} />
+            <Route path='/emprestimos-pendentes' element={<EmprestimoPendente />} />
             <Route path='/emprestimo' element={<EmprestimoCadastro />} />
             <Route path='/emprestimo/:id' element={<EmprestimoCadastro />} />
 
@@ -62,6 +67,10 @@ function App() {
             <Route path='/pessoas' element={<Pessoa />} />
             <Route path='/pessoa' element={<PessoaCadastro />} />
             <Route path='/pessoa/:id' element={<PessoaCadastro />} />
+
+            <Route path='/funcionarios' element={<Funcionario />} />
+            <Route path='/funcionario' element={<FuncionarioCadastro />} />
+            <Route path='/funcionario/:id' element={<FuncionarioCadastro />} />
           </Routes>
         </BrowserRouter>
       </div>

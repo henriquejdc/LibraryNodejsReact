@@ -9,7 +9,16 @@ export default function LivroAutor() {
 
     const listar = async () => {
         const { data } = await axios.get('http://localhost:4000/livroautor');
-        setDados(data);
+        const livrosComInfoRelacionada = await Promise.all(data.map(async livro => {
+            const { data: data_livro } = await axios.get(`http://localhost:4000/livro/${livro.idlivro}`);
+            const { data: data_autor } = await axios.get(`http://localhost:4000/autor/${livro.idautor}`);
+            return {
+                ...livro,
+                livro: data_livro,
+                autor: data_autor
+            };
+        }));
+        setDados(livrosComInfoRelacionada);
     };
 
     useEffect(() => {
@@ -18,8 +27,8 @@ export default function LivroAutor() {
 
     return (
         <>
-            <TituloListagem titulo="Listagem de livros e autores"
-                subtitulo="Neste local você gerencia todos os livros e autores da biblioteca."
+            <TituloListagem titulo="Listagem de autores de livros"
+                subtitulo="Neste local você gerencia todos os autores de livros da biblioteca."
                 url="/livroautor" />
 
             <Table>
@@ -27,8 +36,8 @@ export default function LivroAutor() {
                     <tr>
                         <th>#</th>
                         <th>Código</th>
-                        <th>Cód. Livro</th>
-                        <th>Cód. Autor</th>
+                        <th>Livro</th>
+                        <th>Autor</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -39,8 +48,8 @@ export default function LivroAutor() {
                                     className='btn btn-primary'>Alterar</Link>
                             </td>
                             <td>{d.idlivroautor}</td>
-                            <td>{d.idlivro}</td>
-                            <td>{d.idautor}</td>
+                            <td>{d.livro ? d.livro.titulo : ''}</td>
+                            <td>{d.autor ? d.autor.autor : ''}</td>
                         </tr>
                     ))}
                 </tbody>

@@ -1,6 +1,14 @@
 import emprestimo from "../model/EmprestimoModel.js"
+import livro from "../model/LivroModel.js";
 
 async function listar(req, res) {
+    await emprestimo
+        .findAll()
+        .then(resultado => { res.status(200).json(resultado) })
+        .catch(erro => { res.status(500).json(erro) });
+}
+
+async function listar_pendentes(req, res) {
     await emprestimo
         .findAll()
         .then(resultado => { res.status(200).json(resultado) })
@@ -16,9 +24,6 @@ async function selecionar(req, res) {
 
 async function criar(req, res) {
 
-    if (!req.body.vencimento)
-        res.status(500).send("Parametro vencimento é obrigatório.");
-
     if (!req.body.idlivro)
         res.status(500).send("Parametro idlivro é obrigatório.");
 
@@ -27,48 +32,48 @@ async function criar(req, res) {
 
     // Define a data atual
     const dataAtual = new Date();
+    const dataVencimento = new Date();
+    dataVencimento.setMonth(dataAtual.getMonth() + 1);
 
     await emprestimo
         .create({
-            emprestimo: dataAtual, // Define a data atual
-            vencimento: req.body.vencimento,
-            devolucao: req.body.devolucao || null,
+            emprestimo_data: dataAtual, // Define a data atual
+            vencimento_data: dataVencimento,
+            devolucao_data: req.body.devolucao_data || null,
             idlivro: req.body.idlivro,
             idpessoa: req.body.idpessoa,
         })
         .then(resultado => { res.status(200).json(resultado) })
         .catch(erro => { res.status(500).json(erro) });
+
+    await livro.update({ emprestado: true }, {
+        where: { idlivro: req.body.idlivro },
+    });
 }
 
 async function alterar(req, res) {
+    try {
+        const dataAtual = new Date();
+        console.log(req.body.idlivro);
 
-    if (!req.body.vencimento)
-        res.status(500).send("Parametro vencimento é obrigatório.");
+        // Atualiza o livro para marcar como não emprestado
+        const resultado = await livro.update({ emprestado: false }, {
+            where: { idlivro: req.body.idlivro },
+        });
 
-    if (!req.body.idlivro)
-        res.status(500).send("Parametro idlivro é obrigatório.");
+        // Atualiza o empréstimo para adicionar a data de devolução
+        const resultado2 = await emprestimo.update({
+            devolucao_data: dataAtual,
+        }, {
+            where: {
+                idemprestimo: req.params.idemprestimo
+            }
+        });
 
-    if (!req.body.idpessoa)
-        res.status(500).send("Parametro idpessoa é obrigatório.");
-
-    // Define a data atual
-    const dataAtual = new Date();
-
-    await emprestimo
-        .update({
-            emprestimo: dataAtual, // Define a data atual
-            vencimento: req.body.vencimento,
-            devolucao: req.body.devolucao || null,
-            idlivro: req.body.idlivro,
-            idpessoa: req.body.idpessoa,
-        },
-            {
-                where: {
-                    idemprestimo: req.params.idemprestimo
-                }
-            })
-        .then(resultado => { res.status(200).json(resultado) })
-        .catch(erro => { res.status(500).json(erro) });
+        res.status(200).json(resultado + resultado2);
+    } catch (erro) {
+        res.status(500).json(erro);
+    }
 }
 
 async function excluir(req, res) {
@@ -83,4 +88,4 @@ async function excluir(req, res) {
         .catch(erro => { res.status(500).json(erro) });
 }
 
-export default { listar, selecionar, criar, alterar, excluir };
+export default { listar, selecionar, criar, alterar, excluir, listar_pendentes };

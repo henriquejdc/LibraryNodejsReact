@@ -1,9 +1,19 @@
+create database biblioteca;
+
 create table pessoa(
   idpessoa bigserial not null, 
   pessoa varchar(40) not null,
   email varchar(40) not null, 
   telefone varchar(15) not null,	
   constraint pk_pessoa primary key (idpessoa)	
+);
+
+create table funcionario(
+  idfuncionario bigserial not null, 
+  funcionario varchar(40) not null,
+  email varchar(40) not null, 
+  senha varchar(15) not null,	
+  constraint pk_funcionario primary key (idfuncionario)	
 );
 
 create table autor(
@@ -53,9 +63,9 @@ create table emprestimo(
   idemprestimo bigserial not null, 
   idlivro bigint not null,
   idpessoa bigint not null,	
-  emprestimo date not null default current_date,
-  vencimento date not null,
-  devolucao date null,	
+  emprestimo_data date not null default current_date,
+  vencimento_data date not null,
+  devolucao_data date null,	
   constraint pk_emprestimo primary key (idemprestimo),
   constraint fk_emprestimo_livro foreign key (idlivro) references livro(idlivro),
   constraint fk_emprestimo_pessoa foreign key (idpessoa) references pessoa(idpessoa)	

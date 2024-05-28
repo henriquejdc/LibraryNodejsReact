@@ -7,6 +7,7 @@ import emprestimo from "./controller/Emprestimo.js";
 import livro from "./controller/Livro.js";
 import livroautor from "./controller/LivroAutor.js";
 import pessoa from "./controller/Pessoa.js";
+import funcionario from "./controller/Funcionario.js";
 
 try {
     banco.authenticate();
@@ -62,6 +63,7 @@ app.delete("/editora/:ideditora", editora.excluir);
 */
 
 app.get("/emprestimo", emprestimo.listar);
+app.get("/emprestimo-pendentes", emprestimo.listar_pendentes);
 app.get("/emprestimo/:idemprestimo", emprestimo.selecionar);
 app.post("/emprestimo", emprestimo.criar);
 app.put("/emprestimo/:idemprestimo", emprestimo.alterar);
@@ -117,6 +119,20 @@ app.delete("/pessoa/:idpessoa", pessoa.excluir);
 /**
 {
     "pessoa": "pessoa",
+    "email": "email",
+    "telefone": "telefone"
+}
+*/
+
+app.get("/funcionario", funcionario.listar);
+app.get("/funcionario/:idfuncionario", funcionario.selecionar);
+app.post("/funcionario", funcionario.criar);
+app.put("/funcionario/:idfuncionario", funcionario.alterar);
+app.delete("/funcionario/:idfuncionario", funcionario.excluir);
+
+/**
+{
+    "funcionario": "funcionario",
     "email": "email",
     "telefone": "telefone"
 }

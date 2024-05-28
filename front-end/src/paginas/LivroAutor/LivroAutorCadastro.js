@@ -3,6 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import SelecionarItem from '../../componentes/SelecionarItem';
 
 export default function LivroAutorCadastro() {
     const { id } = useParams();
@@ -73,18 +74,22 @@ export default function LivroAutorCadastro() {
             <h1>{id ? 'Alterar associação livro-autor' : 'Inserir associação livro-autor'}</h1>
             <Form>
                 <Form.Group className="mb-3">
-                    <Form.Label>Cód. Livro</Form.Label>
-                    <Form.Control
-                        type="number"
+
+                <Form.Label>Livro</Form.Label>
+                    <SelecionarItem
+                        url="http://localhost:4000/livro"
                         value={idlivro}
+                        name='titulo'
+                        id='idlivro'
                         onChange={(e) => setLivro(e.target.value)}
                     />
-                </Form.Group>
-                <Form.Group className="mb-3">
-                    <Form.Label>Cód. Autor</Form.Label>
-                    <Form.Control
-                        type="number"
+
+                    <Form.Label>Autor</Form.Label>
+                    <SelecionarItem
+                        url="http://localhost:4000/autor"
                         value={idautor}
+                        name='autor'
+                        id='idautor'
                         onChange={(e) => setAutor(e.target.value)}
                     />
                 </Form.Group>

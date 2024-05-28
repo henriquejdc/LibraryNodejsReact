@@ -8,15 +8,15 @@ export default banco.define("emprestimo", {
         autoIncrement: true,
         allowNull: false
     },
-    emprestimo: {
+    emprestimo_data: {
         type: Sequelize.DATE,
         allowNull: false
     },
-    vencimento: {
+    vencimento_data: {
         type: Sequelize.DATE,
         allowNull: false
     },
-    devolucao: {
+    devolucao_data: {
         type: Sequelize.DATE,
         allowNull: true
     },
